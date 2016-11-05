@@ -1,0 +1,8 @@
+name: VendingMachines
+main: es.pollitoyeye.vendingmachines.VendingMachines
+version: 1.0
+commands:
+ createVendingMachine:
+  usage: /<command>
+  description: Command to create vending machines.
+  permission: VendingMachines.create

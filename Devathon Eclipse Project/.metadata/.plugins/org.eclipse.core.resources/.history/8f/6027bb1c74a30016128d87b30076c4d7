@@ -1,8 +1,0 @@
-name: VendingMachines
-main: es.pollitoyeye.vendingmachines.VendingMachines
-version: 1.0
-commands:
- createMachine:
-  usage: />
-  description:
-  permission:
