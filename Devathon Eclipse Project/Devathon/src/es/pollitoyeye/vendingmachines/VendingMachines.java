@@ -14,15 +14,20 @@ public class VendingMachines extends JavaPlugin{
 	private static MachineManager mManager;
 	private final static String pluginPrefix = ChatColor.YELLOW + "[" + ChatColor.GREEN + "VendingMachines" + ChatColor.YELLOW + "] ";
 	public static HashMap<String,Machine> machinesMap = new HashMap<String,Machine>();
+	public static HashMap<Player,Machine> currentMachineMap = new HashMap<Player,Machine>();
 	public void onEnable(){
 		pl = this;
 		mManager = new MachineManager();
+		loadMachinesMap();
 		Bukkit.getPluginManager().registerEvents(new EventListener(), this);
 		
 	}
 	public void onDisable(){
 		saveMachinesMap();
 		saveConfig();
+	}
+	private void loadMachinesMap(){
+		//TODO
 	}
 	private void saveMachinesMap() {
 		//TODO

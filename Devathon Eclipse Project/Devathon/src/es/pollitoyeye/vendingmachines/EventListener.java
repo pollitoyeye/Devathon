@@ -25,16 +25,34 @@ public class EventListener implements Listener {
 			if(data.length > 1){
 				String uuid = data[1];
 				Player p = event.getPlayer();
-				Machine m;
+				Machine m = null;
 				if(VendingMachines.machinesMap.containsKey(uuid)){
 					m = VendingMachines.machinesMap.get(uuid);
 				}else{
-					m = new Machine();
+					ArmorStand mainStand = null;
+					if(en.getCustomName().startsWith("VendingMachineCore;")){
+						mainStand = (ArmorStand) en;
+					}else{
+						for(Entity toCheck : en.getNearbyEntities(8, 8, 8)){
+							if(toCheck instanceof ArmorStand && toCheck.getCustomName() != null && toCheck.getCustomName().startsWith("VendingMachineCore;")){
+								String[] toCheckData = toCheck.getCustomName().split(";");
+								if(toCheckData.length > 1 && toCheckData[1].equals(uuid)){
+									mainStand = (ArmorStand) toCheck;
+									break;	
+								}
+							}
+						}
+					}
+					if(mainStand != null){
+						m = new Machine(mainStand);
+					}
 				}
-				if(p.isSneaking() && p.hasPermission("VendingMachines.admin")){
-					m.openAdmin(p);
-				}else{
-					m.open(p);
+				if(m != null){
+					if(p.isSneaking() && p.hasPermission("VendingMachines.admin")){
+						m.openAdmin(p);
+					}else{
+						m.open(p);
+					}
 				}
 			}
 		}
