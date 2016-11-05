@@ -6,7 +6,9 @@ import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -17,7 +19,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import es.pollitoyeye.vendingmachines.utils.ItemUtil;
 
 public class Machine {
-	//TODO - Buy part + Remove Button
+	//TODO - Remove Button
 	private HashMap<Integer,SlotData> slotsData = new HashMap<Integer,SlotData>();
 	private Inventory userInv;
 	private Inventory adminInv;
@@ -55,6 +57,7 @@ public class Machine {
 				adminInv.setItem(x + 7, increasePrice);
 			}
 		}
+		adminInv.setItem(40, ItemUtil.createItemStack(Material.FLINT_AND_STEEL, (short) 0, ChatColor.RED + "" + ChatColor.BOLD + "Remove Machine", new String[]{ChatColor.RED + "Click here to remove this machine."}));
 		int x = 1;
 		while(x < 8){
 			userInv.setItem(x, emptyItem);
@@ -66,6 +69,9 @@ public class Machine {
 		userInv.setItem(0, emptySlot);
 		userInv.setItem(4, emptySlot);
 		userInv.setItem(8, emptySlot);
+	}
+	public HashMap<Integer,SlotData> getSlotsData(){
+		return this.slotsData;
 	}
 	public void setSlotsData(HashMap<Integer,SlotData> slotsData){
 		this.slotsData = slotsData;
@@ -81,42 +87,46 @@ public class Machine {
 	public boolean click(Player p, Inventory inv, ItemStack clickedItem, ItemStack cursorItem, int slot){
 		if(inv.equals(adminInv)){
 			if(clickedItem != null){
-				if(slot < 36 && slot > 8){
-					int r = slot % 9;
-					if(r == 1 || r == 5){
-						int actionSlot = 2  * ((int)((slot -9) / 9)) + (r > 1 ? 2:1) ;
-						//Remove price on actionslot
-						SlotData d = slotsData.get((Integer) actionSlot);
-						if(!d.isEmpty()){
-							d.setPrice(d.getPrice() - 1);
-							if(d.getPrice() < 0){
-								d.setPrice(0);
+				if(slot != 40){
+					if(slot < 36 && slot > 8){
+						int r = slot % 9;
+						if(r == 1 || r == 5){
+							int actionSlot = 2  * ((int)((slot -9) / 9)) + (r > 1 ? 2:1) ;
+							//Remove price on actionslot
+							SlotData d = slotsData.get((Integer) actionSlot);
+							if(!d.isEmpty()){
+								d.setPrice(d.getPrice() - 1);
+								if(d.getPrice() < 0){
+									d.setPrice(0);
+								}
+								updateInvs();
+							}
+						}
+						if(r == 3 || r == 7){
+							int actionSlot = 2  * ((int)((slot -9) / 9)) + (r > 3 ? 2:1) ;
+							//Add price on actionslot
+							SlotData d = slotsData.get((Integer) actionSlot);
+							if(!d.isEmpty()){
+								d.setPrice(d.getPrice() + 1);
+								updateInvs();
+							}
+						}
+						if(r == 2 || r == 6){
+							int actionSlot = 2  * ((int)((slot -9) / 9)) + (r > 2 ? 2:1) ;
+							//Clicked item slot
+							SlotData d = slotsData.get((Integer) actionSlot);
+							if(cursorItem != null && cursorItem.getType() != Material.AIR){
+								d.setDisplayItem(cursorItem);
+								d.setEmpty(false);
+							}else{
+								d.setEmpty(true);
 							}
 							updateInvs();
+							updateDisplayItems();
 						}
 					}
-					if(r == 3 || r == 7){
-						int actionSlot = 2  * ((int)((slot -9) / 9)) + (r > 3 ? 2:1) ;
-						//Add price on actionslot
-						SlotData d = slotsData.get((Integer) actionSlot);
-						if(!d.isEmpty()){
-							d.setPrice(d.getPrice() + 1);
-							updateInvs();
-						}
-					}
-					if(r == 2 || r == 6){
-						int actionSlot = 2  * ((int)((slot -9) / 9)) + (r > 2 ? 2:1) ;
-						//Clicked item slot
-						SlotData d = slotsData.get((Integer) actionSlot);
-						if(cursorItem != null && cursorItem.getType() != Material.AIR){
-							d.setDisplayItem(cursorItem);
-							d.setEmpty(false);
-						}else{
-							d.setEmpty(true);
-						}
-						updateInvs();
-						updateDisplayItems();
-					}
+				}else{
+					remove();
 				}
 			}
 			return true;
@@ -169,6 +179,33 @@ public class Machine {
 			if(x == 4){
 				x = 5;
 			}
+		}
+	}
+	public void remove(){
+		Location loc = mainStand.getLocation();
+		for(Entity en : mainStand.getNearbyEntities(10, 10, 10)){
+			if(en instanceof ArmorStand && en.getCustomName() != null && en.getCustomName().startsWith("VendingMachinePart;")){
+				String[] toCheckData = en.getCustomName().split(";");
+				if(toCheckData.length > 1 && toCheckData[1].equals(uuid)){
+					en.remove();
+				}
+			}
+		}
+		for(double z = loc.getZ() + 1; z >= loc.getZ() - 1; z--){
+			for(int y = 0; y <= 2; y++){
+				Location blLoc = loc.clone().add(0,y,0);
+				blLoc.setZ(z);
+				blLoc.getBlock().setType(Material.AIR);
+			}
+		}
+		mainStand.remove();
+		VendingMachines.machinesMap.remove(uuid);
+		if(VendingMachines.loadedSlotsData.containsKey(uuid)){
+			VendingMachines.loadedSlotsData.remove(uuid);
+		}
+		FileConfiguration config = VendingMachines.getPlugin().getConfig();
+		if(config.contains("Machines." + uuid)){
+			config.set("Machines." + uuid, null);
 		}
 	}
 	private void updateDisplayItems(){

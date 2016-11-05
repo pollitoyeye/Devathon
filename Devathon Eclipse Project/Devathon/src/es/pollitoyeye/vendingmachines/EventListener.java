@@ -1,12 +1,17 @@
 package es.pollitoyeye.vendingmachines;
+
+import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 
 
@@ -47,6 +52,9 @@ public class EventListener implements Listener {
 					}
 					if(mainStand != null){
 						m = new Machine(mainStand, uuid);
+						if(VendingMachines.loadedSlotsData.containsKey(uuid)){
+							m.setSlotsData(VendingMachines.loadedSlotsData.get(uuid));
+						}
 						VendingMachines.machinesMap.put(uuid, m);
 					}
 				}
@@ -62,10 +70,38 @@ public class EventListener implements Listener {
 		}
 	}
 	@EventHandler
+	public void onInventoryClose(InventoryCloseEvent event){
+		if(VendingMachines.currentMachineMap.containsKey(event.getPlayer())){
+			VendingMachines.currentMachineMap.remove(event.getPlayer());
+		}
+	}
+	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event){
 		HumanEntity whoClicked = event.getWhoClicked();
 		if(event.getClickedInventory() != null && VendingMachines.currentMachineMap.containsKey(whoClicked)){
 			event.setCancelled(VendingMachines.currentMachineMap.get(whoClicked).click((Player)whoClicked,event.getClickedInventory(),event.getCurrentItem(),event.getCursor(),event.getSlot()));
 		}
+	}
+	@EventHandler
+	public void onPistonRetract(BlockPistonRetractEvent event){
+		Block bl = event.getBlock();
+		for(Entity en : bl.getWorld().getEntities()){
+			for(Block b : event.getBlocks()){
+				if(en.getLocation().distance(b.getLocation().clone().add(0.5,0.5,0.5)) < 1.0){
+					if(en instanceof ArmorStand && en.getCustomName() != null && (en.getCustomName().startsWith("VendingMachinePart;") || en.getCustomName().startsWith("VendingMachineCore;"))){
+						event.setCancelled(true);
+					}
+				}
+			}
+			if(en.getLocation().distance(bl.getLocation().clone().add(0.5,0.5,0.5)) < 1.0){
+				if(en instanceof ArmorStand && en.getCustomName() != null && (en.getCustomName().startsWith("VendingMachinePart;") || en.getCustomName().startsWith("VendingMachineCore;"))){
+					event.setCancelled(true);
+				}
+			}
+		}
+	}
+	@EventHandler
+	public void onPistonExtend(BlockPistonExtendEvent event){
+		
 	}
 }

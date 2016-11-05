@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class EconomyManager {
+	//You may change this class to use your own economy, currently it uses a diamond base economy.
 	public int getCurrentMoney(Player p){
 		int x = 0;
 		for(ItemStack s : p.getInventory().getContents()){

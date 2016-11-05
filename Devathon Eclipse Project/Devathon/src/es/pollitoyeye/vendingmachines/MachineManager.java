@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
 public class MachineManager {
-	public void placeMachine(Block bl){
+	public void placeVendingMachine(Block bl){
 		@SuppressWarnings("deprecation")
 		FileConfiguration config = YamlConfiguration.loadConfiguration(VendingMachines.getPlugin().getResource("Machine.schem"));
 		UUID structureUUID = UUID.randomUUID();
