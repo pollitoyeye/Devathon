@@ -1,0 +1,7 @@
+package es.pollitoyeye.vendingmachines.utils;
+
+public class StructureManager {
+	public static void loadStructure(String s){
+		
+	}
+}

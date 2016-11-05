@@ -1,0 +1,7 @@
+package es.pollitoyeye.vendingmachines;
+
+import org.bukkit.event.Listener;
+
+public class EventListener implements Listener {
+
+}

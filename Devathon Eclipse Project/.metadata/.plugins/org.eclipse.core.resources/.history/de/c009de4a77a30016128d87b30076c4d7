@@ -1,0 +1,34 @@
+package es.pollitoyeye.vendingmachines;
+
+import java.util.HashMap;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+
+public class Machine {
+	//TODO
+	private HashMap<Integer,Integer> slotPrices = new HashMap<Integer,Integer>();
+	private Inventory userInv;
+	private Inventory adminInv;
+	public Machine(){
+		userInv = Bukkit.createInventory(null, 9, ChatColor.BLUE + "Vending Machine");
+		adminInv = Bukkit.createInventory(null, 54, ChatColor.BLUE + "Vending Machine Admin Menu");
+		for(int x = 0; x < 55; x+= 9){
+			adminInv.setItem(x, new Item);
+		}
+	}
+	public void open(Player p){
+		p.openInventory(userInv);
+	}
+	public void openAdmin(Player p){
+		p.openInventory(adminInv);
+	}
+	public void click(){
+		
+	}
+	private void updateInvs(){
+		
+	}
+}

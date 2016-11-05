@@ -1,0 +1,15 @@
+package es.pollitoyeye.vendingmachines;
+
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerChatEvent;
+
+import es.pollitoyeye.vendingmachines.utils.StructureManager;
+
+public class EventListener implements Listener {
+	@EventHandler
+	public void onTest(PlayerChatEvent event){
+		StructureManager.loadMachine(event.getPlayer().getLocation());
+		Material.wood_bu
+	}
+}

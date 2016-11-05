@@ -1,0 +1,12 @@
+package es.pollitoyeye.vendingmachines;
+
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerChatEvent;
+
+public class EventListener implements Listener {
+	@EventHandler
+	public void onTest(PlayerChatEvent event){
+		
+	}
+}

@@ -1,0 +1,26 @@
+package es.pollitoyeye.vendingmachines;
+
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerChatEvent;
+
+import es.pollitoyeye.vendingmachines.utils.MachineManager;
+
+
+public class EventListener implements Listener {
+	@EventHandler
+	public void onMachineDamage(EntityDamageEvent event){
+		Entity en = event.getEntity();
+		if(en instanceof ArmorStand && en.getCustomName() != null && (en.getCustomName().startsWith("VendingMachineCore;") || en.getCustomName().startsWith("VendingMachinePart;"))){
+			
+		}
+	}
+
+	@EventHandler
+	public void onTest(PlayerChatEvent event){
+		VendingMachines.getMachineManager().placeMachine(event.getPlayer().getLocation().getBlock());
+	}
+}

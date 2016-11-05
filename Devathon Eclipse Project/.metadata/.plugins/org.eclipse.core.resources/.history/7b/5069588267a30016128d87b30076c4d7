@@ -1,0 +1,13 @@
+package es.pollitoyeye.vendingmachines.utils;
+
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import es.pollitoyeye.vendingmachines.VendingMachines;
+
+public class StructureManager {
+	public static void loadStructure(String s){
+		@SuppressWarnings("deprecation")
+		FileConfiguration config = YamlConfiguration.loadConfiguration(VendingMachines.getPlugin().getResource(s));
+	}
+}

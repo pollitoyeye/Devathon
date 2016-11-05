@@ -1,0 +1,18 @@
+package es.pollitoyeye.vendingmachines;
+
+import java.util.HashMap;
+
+import org.bukkit.entity.Player;
+
+public class Machine {
+	public static HashMap<Integer,Integer> slotPrices = new HashMap<Integer,Integer>();
+	public void open(Player p){
+		
+	}
+	public void openAdminInventory(Player p){
+		
+	}
+	public void click(){
+		
+	}
+}

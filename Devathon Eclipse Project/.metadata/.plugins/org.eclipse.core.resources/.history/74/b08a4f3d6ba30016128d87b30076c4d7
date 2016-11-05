@@ -1,0 +1,39 @@
+package es.pollitoyeye.vendingmachines.utils;
+
+import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.EntityType;
+import org.bukkit.util.EulerAngle;
+
+import es.pollitoyeye.vendingmachines.VendingMachines;
+
+public class StructureManager {
+	public static void loadMachine(Location loc){
+		@SuppressWarnings("deprecation")
+		FileConfiguration config = YamlConfiguration.loadConfiguration(VendingMachines.getPlugin().getResource("Machine.schem"));
+		int currentPos = 0;
+		while(config.contains("" + currentPos)){
+			Location spawnLoc = loc.clone().subtract(config.getDouble(currentPos + ".position.x"), config.getDouble(currentPos + ".position.y"), config.getDouble(currentPos + ".position.z"));
+			spawnLoc.setYaw(Float.parseFloat(config.get(currentPos + ".yaw").toString()));
+			spawnLoc.setPitch(Float.parseFloat(config.get(currentPos + ".pitch").toString()));
+			ArmorStand a = (ArmorStand) loc.getWorld().spawnEntity(spawnLoc, EntityType.ARMOR_STAND);
+			a.setHelmet(config.getItemStack(currentPos + ".helmet"));
+			a.setChestplate(config.getItemStack(currentPos + ".chestplate"));
+			a.setLeggings(config.getItemStack(currentPos + ".leggings"));
+			a.setBoots(config.getItemStack(currentPos + ".boots"));
+			a.setVisible(config.getBoolean(currentPos + ".visible"));
+			a.setSmall(config.getBoolean(currentPos + ".small"));
+			a.setArms(config.getBoolean(currentPos + ".arms"));
+			a.setBasePlate(config.getBoolean(currentPos + ".plate"));
+			a.setBodyPose(new EulerAngle(config.getDouble(currentPos + ".body.x"),config.getDouble(currentPos + ".body.y"),config.getDouble(currentPos + ".body.z")));
+			a.setHeadPose(new EulerAngle(config.getDouble(currentPos + ".head.x"),config.getDouble(currentPos + ".head.y"),config.getDouble(currentPos + ".head.z")));
+			a.setLeftArmPose(new EulerAngle(config.getDouble(currentPos + ".leftarm.x"),config.getDouble(currentPos + ".leftarm.y"),config.getDouble(currentPos + ".leftarm.z")));
+			a.setLeftLegPose(new EulerAngle(config.getDouble(currentPos + ".leftleg.x"),config.getDouble(currentPos + ".leftleg.y"),config.getDouble(currentPos + ".leftleg.z")));
+			a.setRightArmPose(new EulerAngle(config.getDouble(currentPos + ".rightarm.x"),config.getDouble(currentPos + ".rightarm.y"),config.getDouble(currentPos + ".rightarm.z")));
+			a.setRightLegPose(new EulerAngle(config.getDouble(currentPos + ".rightleg.x"),config.getDouble(currentPos + ".rightleg.y"),config.getDouble(currentPos + ".rightleg.z")));
+			currentPos++;
+		}
+	}
+}
