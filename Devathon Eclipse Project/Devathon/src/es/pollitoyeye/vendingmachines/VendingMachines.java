@@ -9,15 +9,19 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import es.pollitoyeye.vendingmachines.utils.EconomyManager;
+
 public class VendingMachines extends JavaPlugin{
 	private static VendingMachines pl;
 	private static MachineManager mManager;
+	private static EconomyManager eManager;
 	private final static String pluginPrefix = ChatColor.YELLOW + "[" + ChatColor.GREEN + "VendingMachines" + ChatColor.YELLOW + "] ";
 	public static HashMap<String,Machine> machinesMap = new HashMap<String,Machine>();
 	public static HashMap<Player,Machine> currentMachineMap = new HashMap<Player,Machine>();
 	public void onEnable(){
 		pl = this;
 		mManager = new MachineManager();
+		eManager = new EconomyManager();
 		loadMachinesMap();
 		Bukkit.getPluginManager().registerEvents(new EventListener(), this);
 		
@@ -50,6 +54,9 @@ public class VendingMachines extends JavaPlugin{
 	}
 	public static MachineManager getMachineManager(){
 		return mManager;
+	}
+	public static EconomyManager getEconomyManager(){
+		return eManager;
 	}
 	public static String getPluginPrefix(){
 		return pluginPrefix;

@@ -78,7 +78,7 @@ public class Machine {
 	public void openAdmin(Player p){
 		p.openInventory(adminInv);
 	}
-	public boolean click(Inventory inv, ItemStack clickedItem, ItemStack cursorItem, int slot){
+	public boolean click(Player p, Inventory inv, ItemStack clickedItem, ItemStack cursorItem, int slot){
 		if(inv.equals(adminInv)){
 			if(clickedItem != null){
 				if(slot < 36 && slot > 8){
@@ -121,6 +121,18 @@ public class Machine {
 			}
 			return true;
 		}else if(inv.equals(userInv)){
+			if(slot  > 0 &&  slot != 4 && slot != 8){
+				int actionSlot = slot - (slot > 4 ? 1 : 0);
+				SlotData d = slotsData.get((Integer) actionSlot);
+				int currentMoney = VendingMachines.getEconomyManager().getCurrentMoney(p);
+				if(currentMoney > d.getPrice()){
+					VendingMachines.getEconomyManager().withdrawMoney(p,d.getPrice());
+					p.sendMessage(VendingMachines.getPluginPrefix() + ChatColor.GREEN + "You bought an item from the machine.");
+					p.getInventory().addItem(d.getDisplayItem());
+				}else{
+					p.sendMessage(VendingMachines.getPluginPrefix() + ChatColor.RED + "You don't have enough money to buy this.");
+				}
+			}
 			return true;
 		}
 		return false;

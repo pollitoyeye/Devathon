@@ -65,7 +65,7 @@ public class EventListener implements Listener {
 	public void onInventoryClick(InventoryClickEvent event){
 		HumanEntity whoClicked = event.getWhoClicked();
 		if(event.getClickedInventory() != null && VendingMachines.currentMachineMap.containsKey(whoClicked)){
-			event.setCancelled(VendingMachines.currentMachineMap.get(whoClicked).click(event.getClickedInventory(),event.getCurrentItem(),event.getCursor(),event.getSlot()));
+			event.setCancelled(VendingMachines.currentMachineMap.get(whoClicked).click((Player)whoClicked,event.getClickedInventory(),event.getCurrentItem(),event.getCursor(),event.getSlot()));
 		}
 	}
 }
