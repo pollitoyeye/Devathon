@@ -6,6 +6,7 @@ public class SlotData {
 	private ItemStack displayItem;
 	private int price;
 	private boolean empty;
+	private int itemAmount = 1;
 	public SlotData(ItemStack displayItem, int price, boolean empty){
 		this.displayItem = displayItem;
 		this.price = price;
@@ -13,6 +14,7 @@ public class SlotData {
 	}
 	public void setDisplayItem(ItemStack s){
 		this.displayItem = s;
+		this.itemAmount = s.getAmount();
 	}
 	public void setPrice(int p){
 		this.price = p;
@@ -21,7 +23,9 @@ public class SlotData {
 		this.empty = b;
 	}
 	public ItemStack getDisplayItem(){
-		return displayItem.clone();
+		ItemStack s = displayItem.clone();
+		s.setAmount(itemAmount);
+		return s;
 	}
 	public int getPrice(){
 		return price;

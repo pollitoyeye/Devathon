@@ -1,10 +1,12 @@
 package es.pollitoyeye.vendingmachines;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 
 
@@ -44,7 +46,8 @@ public class EventListener implements Listener {
 						}
 					}
 					if(mainStand != null){
-						m = new Machine(mainStand);
+						m = new Machine(mainStand, uuid);
+						VendingMachines.machinesMap.put(uuid, m);
 					}
 				}
 				if(m != null){
@@ -53,8 +56,16 @@ public class EventListener implements Listener {
 					}else{
 						m.open(p);
 					}
+					VendingMachines.currentMachineMap.put(p, m);
 				}
 			}
+		}
+	}
+	@EventHandler
+	public void onInventoryClick(InventoryClickEvent event){
+		HumanEntity whoClicked = event.getWhoClicked();
+		if(event.getClickedInventory() != null && VendingMachines.currentMachineMap.containsKey(whoClicked)){
+			event.setCancelled(VendingMachines.currentMachineMap.get(whoClicked).click(event.getClickedInventory(),event.getCurrentItem(),event.getCursor(),event.getSlot()));
 		}
 	}
 }
